@@ -41,7 +41,7 @@ Requirement: The R working directory must contain the data zipfile, as well as t
 
 The data is read directly from the zip file (dataframe = `df`) and prepared:  
 * The date strings are parsed and coerced to a date using the `lubridate` package  
-* The interval code is the time of the beginning of the 5-minutes interval, expressed as a sting. A new column 'intervaltime' is added, which converts this code to a  POSIXct (date-time)  (useful for plotting). Only the 'hour:minute' part of this date-time will be used.  
+* The interval code is the time of the beginning of the 5-minutes interval, expressed as a not-so-clear string (or number, depending on how the data was read) . A new column 'intervaltime' is added, which converts this code to a  date-time (POSIXct),  in order to prepare plotting. Only the 'hour:minute' part of this date-time will be used.  
 
 ```{r getdata, echo = TRUE}
 # ---------------------------------------------------------
@@ -98,7 +98,7 @@ df$intervaltime <- makedate(df$interval)
 
 
 ## What is mean total number of steps taken per day?
-Here the missing values are ignored, i.e. eliminated usind `complete.cases()` (as the only missing values are located in the `steps` column. It would not make sense to keep these rows, as the NA's might cout as zeroes in a sum, impacting the results. .
+Here the missing values are ignored, i.e. eliminated usind `complete.cases()` , as the only missing values are located in the `steps` column. It would not make sense to keep these rows, as the NA's might cout as zeroes in a sum, impacting the results. .
 
 ```{r histogram1}
 nonatsteps <- df[complete.cases(df),] %>%
@@ -114,12 +114,12 @@ medstep1 <- median(nonatsteps$steps)
 
 ```
 
-Considering all (non-missing) number of steps , the median number of steps in a day is `r medstep1`, and the mean `r meanstep1`
+Considering all (non-missing) number of steps , the median number of steps in a day is $`r medstep1`$, and the mean $`r meanstep1`$
 
 
 ## What is the average daily activity pattern?
 
-Here we first plot the daily activity pattern. The dataframe created in the process is named `nonamsteps` and will be useful later, when inmutting values
+Here we first plot the daily activity pattern. The dataframe created in the process is named `nonamsteps` and will be useful later, when inputting values
 
 ```{r dailypattern }
 
@@ -146,7 +146,7 @@ abline(v=maxt, col="blue", lw=1, lt=2)
 
 # find maximum
 maxsteps <- with(nonamsteps,
-     steps[which(intervaltime==maxt)[1]])  ##206.1698
+     steps[which(intervaltime==maxt)[1]])
 
 ```
 
@@ -167,7 +167,7 @@ mv <- c(missingdate = sum(is.na(df$date)),
 Missing values occur only in  'steps', in `r mv[3]` rows
 
 ```{r missing_explore2}
-# missing values/values per day
+# (missing values)/(values per day)
 sum(is.na(df$steps))/length(unique(df$interval))
 
 # days with Missing values 

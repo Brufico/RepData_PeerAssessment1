@@ -57,6 +57,9 @@ var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/<
 hljs.initHighlightingOnLoad();
 </script>
 
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
 <style type="text/css">
@@ -216,40 +219,11 @@ opts_chunk$set(echo=TRUE, fig.height=4, fig.width=7, fig.align=&quot;center&quot
 # libraries &amp; settings
 
 library(lubridate)
-</code></pre>
+library(dplyr)
+library(ggplot2)
 
-<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 3.2.3
-</code></pre>
 
-<pre><code class="r">library(dplyr)
-</code></pre>
-
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.2.2
-</code></pre>
-
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;
-## 
-## The following objects are masked from &#39;package:lubridate&#39;:
-## 
-##     intersect, setdiff, union
-## 
-## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag
-## 
-## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union
-</code></pre>
-
-<pre><code class="r">library(ggplot2)
-</code></pre>
-
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.2.3
-</code></pre>
-
-<pre><code class="r"># Changing temporarily the &quot;LC_TIME&quot; locale to match the english date/time conventions
+# Changing temporarily the &quot;LC_TIME&quot; locale to match the english date/time conventions
 # save
 curloctime &lt;- Sys.getlocale(&quot;LC_TIME&quot;)
 # set
@@ -267,7 +241,7 @@ Sys.setlocale(&quot;LC_TIME&quot;, &quot;English&quot;)
 
 <ul>
 <li>The date strings are parsed and coerced to a date using the <code>lubridate</code> package<br/></li>
-<li>The interval code is the time of the beginning of the 5-minutes interval, expressed as a sting. A new column &#39;intervaltime&#39; is added, which converts this code to a  POSIXct (date-time)  (useful for plotting). Only the &#39;hour:minute&#39; part of this date-time will be used.<br/></li>
+<li>The interval code is the time of the beginning of the 5-minutes interval, expressed as a not-so-clear string (or number, depending on how the data was read) . A new column &#39;intervaltime&#39; is added, which converts this code to a  date-time (POSIXct),  in order to prepare plotting. Only the &#39;hour:minute&#39; part of this date-time will be used.<br/></li>
 </ul>
 
 <pre><code class="r"># ---------------------------------------------------------
@@ -322,7 +296,7 @@ df$intervaltime &lt;- makedate(df$interval)
 
 <h2>What is mean total number of steps taken per day?</h2>
 
-<p>Here the missing values are ignored, i.e. eliminated usind <code>complete.cases()</code> (as the only missing values are located in the <code>steps</code> column. It would not make sense to keep these rows, as the NA&#39;s might cout as zeroes in a sum, impacting the results. .</p>
+<p>Here the missing values are ignored, i.e. eliminated usind <code>complete.cases()</code> , as the only missing values are located in the <code>steps</code> column. It would not make sense to keep these rows, as the NA&#39;s might cout as zeroes in a sum, impacting the results. .</p>
 
 <pre><code class="r">nonatsteps &lt;- df[complete.cases(df),] %&gt;%
         group_by(date) %&gt;%
@@ -339,11 +313,11 @@ meanstep1 &lt;- mean(nonatsteps$steps)
 medstep1 &lt;- median(nonatsteps$steps)
 </code></pre>
 
-<p>Considering all (non-missing) number of steps , the median number of steps in a day is 10765, and the mean 10766.19</p>
+<p>Considering all (non-missing) number of steps , the median number of steps in a day is \(10765\), and the mean \(10766.19\)</p>
 
 <h2>What is the average daily activity pattern?</h2>
 
-<p>Here we first plot the daily activity pattern. The dataframe created in the process is named <code>nonamsteps</code> and will be useful later, when inmutting values</p>
+<p>Here we first plot the daily activity pattern. The dataframe created in the process is named <code>nonamsteps</code> and will be useful later, when inputting values</p>
 
 <pre><code class="r">nonamsteps &lt;- df[complete.cases(df), ] %&gt;%
         group_by(intervaltime) %&gt;%
@@ -370,7 +344,7 @@ abline(v=maxt, col=&quot;blue&quot;, lw=1, lt=2)
 
 <pre><code class="r"># find maximum
 maxsteps &lt;- with(nonamsteps,
-     steps[which(intervaltime==maxt)[1]])  ##206.1698
+     steps[which(intervaltime==maxt)[1]])
 </code></pre>
 
 <p>The average walking activity spikes early in the day, to a maximum of 206.17 steps, between 8:35 and 8:40, as shown on the plot.</p>
@@ -386,7 +360,7 @@ maxsteps &lt;- with(nonamsteps,
 
 <p>Missing values occur only in  &#39;steps&#39;, in 2304 rows</p>
 
-<pre><code class="r"># missing values/values per day
+<pre><code class="r"># (missing values)/(values per day)
 sum(is.na(df$steps))/length(unique(df$interval))
 </code></pre>
 

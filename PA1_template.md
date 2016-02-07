@@ -25,46 +25,10 @@ opts_chunk$set(echo=TRUE, fig.height=4, fig.width=7, fig.align="center")
 # libraries & settings
 
 library(lubridate)
-```
-
-```
-## Warning: package 'lubridate' was built under R version 3.2.3
-```
-
-```r
 library(dplyr)
-```
-
-```
-## Warning: package 'dplyr' was built under R version 3.2.2
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following objects are masked from 'package:lubridate':
-## 
-##     intersect, setdiff, union
-## 
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
-```
 
-```
-## Warning: package 'ggplot2' was built under R version 3.2.3
-```
 
-```r
 # Changing temporarily the "LC_TIME" locale to match the english date/time conventions
 # save
 curloctime <- Sys.getlocale("LC_TIME")
@@ -82,7 +46,7 @@ Requirement: The R working directory must contain the data zipfile, as well as t
 
 The data is read directly from the zip file (dataframe = `df`) and prepared:  
 * The date strings are parsed and coerced to a date using the `lubridate` package  
-* The interval code is the time of the beginning of the 5-minutes interval, expressed as a sting. A new column 'intervaltime' is added, which converts this code to a  POSIXct (date-time)  (useful for plotting). Only the 'hour:minute' part of this date-time will be used.  
+* The interval code is the time of the beginning of the 5-minutes interval, expressed as a not-so-clear string (or number, depending on how the data was read) . A new column 'intervaltime' is added, which converts this code to a  date-time (POSIXct),  in order to prepare plotting. Only the 'hour:minute' part of this date-time will be used.  
 
 
 ```r
@@ -139,7 +103,7 @@ df$intervaltime <- makedate(df$interval)
 
 
 ## What is mean total number of steps taken per day?
-Here the missing values are ignored, i.e. eliminated usind `complete.cases()` (as the only missing values are located in the `steps` column. It would not make sense to keep these rows, as the NA's might cout as zeroes in a sum, impacting the results. .
+Here the missing values are ignored, i.e. eliminated usind `complete.cases()` , as the only missing values are located in the `steps` column. It would not make sense to keep these rows, as the NA's might cout as zeroes in a sum, impacting the results. .
 
 
 ```r
@@ -159,12 +123,12 @@ meanstep1 <- mean(nonatsteps$steps)
 medstep1 <- median(nonatsteps$steps)
 ```
 
-Considering all (non-missing) number of steps , the median number of steps in a day is 10765, and the mean 10766.19
+Considering all (non-missing) number of steps , the median number of steps in a day is $10765$, and the mean $10766.19$
 
 
 ## What is the average daily activity pattern?
 
-Here we first plot the daily activity pattern. The dataframe created in the process is named `nonamsteps` and will be useful later, when inmutting values
+Here we first plot the daily activity pattern. The dataframe created in the process is named `nonamsteps` and will be useful later, when inputting values
 
 
 ```r
@@ -194,7 +158,7 @@ abline(v=maxt, col="blue", lw=1, lt=2)
 ```r
 # find maximum
 maxsteps <- with(nonamsteps,
-     steps[which(intervaltime==maxt)[1]])  ##206.1698
+     steps[which(intervaltime==maxt)[1]])
 ```
 
 The average walking activity spikes early in the day, to a maximum of 206.17 steps, between 8:35 and 8:40, as shown on the plot.
@@ -215,7 +179,7 @@ Missing values occur only in  'steps', in 2304 rows
 
 
 ```r
-# missing values/values per day
+# (missing values)/(values per day)
 sum(is.na(df$steps))/length(unique(df$interval))
 ```
 
